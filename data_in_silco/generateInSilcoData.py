@@ -317,15 +317,16 @@ def generateData_v4():
 	##########################
 	# Generate Data
 	#########################
-	data_one_hot_train, label_train = tools.dataGenerator_sign_2feature_onehot(save_train_data_filename, save_train_label_filename, num_of_train_samples, len_of_sample, pattern_arr, prob_func, prob_threshold)
-	data_one_hot_test, label_test = tools.dataGenerator_sign_2feature_onehot(save_test_data_filename, save_test_label_filename, num_of_test_samples, len_of_sample, pattern_arr, prob_func, prob_threshold)
+	tools.dataGenerator_sign_2feature_onehot(save_train_data_filename, save_train_label_filename, num_of_train_samples, len_of_sample, pattern_arr, prob_func, prob_threshold)
+	tools.dataGenerator_sign_2feature_onehot(save_test_data_filename, save_test_label_filename, num_of_test_samples, len_of_sample, pattern_arr, prob_func, prob_threshold)
 
 	print ("Finish the data generating.")
-	return (data_one_hot_train, label_train),(data_one_hot_test, label_test)
+
 ###########################################################################
 if __name__ == "__main__":
 	#generateData_v1()
 	#generateData_v2()
-	generateData_v3()
+	#generateData_v3()
+	generateData_v4()
 
 ###END#################

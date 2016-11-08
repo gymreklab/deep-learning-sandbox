@@ -1,3 +1,13 @@
+'''
+Detect the effect of distance between regulatory region
+@An Zheng
+
+Model:
+1-layer CNN
+fully connected layer
+'''
+
+
 import numpy as np
 import h5py
 import scipy.io
@@ -13,20 +23,11 @@ from keras.constraints import maxnorm
 from keras.layers.recurrent import LSTM, GRU
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 
-from data_in_silco import generateInSilcoData
-'''
-print 'loading data'
-trainmat = h5py.File('data/train.mat')
-validmat = scipy.io.loadmat('data/valid.mat')
-testmat = scipy.io.loadmat('data/test.mat')
+from data_in_silco import load
 
-X_train = np.transpose(np.array(trainmat['trainxdata']),axes=(2,0,1))
-y_train = np.array(trainmat['traindata']).T
-
-forward_lstm = LSTM(input_dim=320, output_dim=320, return_sequences=True)
-backward_lstm = LSTM(input_dim=320, output_dim=320, return_sequences=True)
-brnn = Bidirectional(forward=forward_lstm, backward=backward_lstm, return_sequences=True)
-'''
+#######################################
+# parameters
+#######################################
 
 maxlen = 500
 batch_size = 10
@@ -37,7 +38,14 @@ hidden_dims = 250
 nb_epoch = 5
 
 
-(X_train, y_train), (X_test, y_test) = generateInSilcoData.generateData_v4()
+#######################################
+# load data
+#######################################
+(X_train, y_train), (X_test, y_test) = load.load_onehot()
+
+#######################################
+# build model
+#######################################
 print 'building model'
 model = Sequential()
 model.add(Convolution1D(input_dim=4,
@@ -78,16 +86,11 @@ model.add(Activation('sigmoid'))
 print 'compiling model'
 model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 
-'''
-print 'running at most 60 epochs'
 
-checkpointer = ModelCheckpoint(filepath="DanQ_bestmodel.hdf5", verbose=1, save_best_only=True)
-earlystopper = EarlyStopping(monitor='val_loss', patience=5, verbose=1)
-
-model.fit(X_train, y_train, batch_size=100, nb_epoch=60, shuffle=True, show_accuracy=True, validation_data=(np.transpose(validmat['validxdata'],axes=(0,2,1)), validmat['validdata']), callbacks=[checkpointer,earlystopper])
-
-tresults = model.evaluate(np.transpose(testmat['testxdata'],axes=(0,2,1)), testmat['testdata'],show_accuracy=True)
-
-print tresults
-'''
+######################################
+# train model
+######################################
 model.fit(X_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch, validation_data=(X_test, y_test))
+
+
+###END#########################################3

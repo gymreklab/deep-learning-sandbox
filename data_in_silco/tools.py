@@ -209,8 +209,8 @@ def dataGenerator_sign_2feature_onehot(save_data_file, save_label_file, num_of_s
 	######################
 	# save data
 	######################
-	# save_arr(save_data_file, data_kmer, num_of_samples, len_of_sample)
-	# save_arr(save_label_file, label, num_of_samples, 1)
+	save_3D_arr(save_data_file, data_one_hot, num_of_samples, len_of_sample)
+	save_arr(save_label_file, label, num_of_samples, 1)
 
 
 	#####################
@@ -227,6 +227,21 @@ def save_arr(filename, data, num_of_data, data_length):
 		data_str = ""
 		for feature_index in range(data_length):
 			data_str += str(data[data_index][feature_index])+" "
+		ofile.write(data_str+"\n")
+	ofile.close()
+
+def save_3D_arr(filename, data, num_of_data, data_length):
+	'''
+	save one-hot data as
+	0010 0100 ...
+	0100 1000 ...
+	...  ...  ...
+	'''
+	ofile = open(filename, 'w')
+	for data_index in range(num_of_data):
+		data_str = ""
+		for feature_index in range(data_length):
+			data_str += "".join([str(d) for d in data[data_index][feature_index]]) + " "
 		ofile.write(data_str+"\n")
 	ofile.close()
 
